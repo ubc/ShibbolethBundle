@@ -10,6 +10,7 @@
         <parameter key="shibboleth.secured_handler">true</parameter>
         <parameter key="shibboleth.session_initiator_path">/Login</parameter>
         <parameter key="shibboleth.username_attribute">shib-person-uid</parameter>
+        <parameter key="shibboleth.logout_message"></parameter>
         <parameter key="shibboleth.attribute_definitions" type="collection" />
     </parameters>
 
@@ -19,9 +20,10 @@
 	        <argument>%shibboleth.session_initiator_path%</argument>
 	        <argument>%shibboleth.secured_handler%</argument>
             <argument>%shibboleth.username_attribute%</argument>
+            <argument>%shibboleth.logout_message%</argument>
 	        <argument type="collection">%shibboleth.attribute_definitions%</argument>
         </service>
-	
+
         <service id="security.authentication.provider.shibboleth"
 	        class="KULeuven\ShibbolethBundle\Security\ShibbolethAuthProvider" public="false">
                <tag name="monolog.logger" channel="security" />

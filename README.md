@@ -93,6 +93,7 @@ Possible configuration parameters are:
 		handler_path: /Shibboleth.sso
 		secured_handler: true
 		session_initiator_path: /Login			
+ 		logout_message: ~
 ```
 
 The above listed configuration values are the default values. To use the defaults, simply use the following line in your config:

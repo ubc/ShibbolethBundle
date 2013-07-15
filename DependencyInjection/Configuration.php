@@ -50,6 +50,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('handler_path')->end()
                 ->booleanNode('secured_handler')->end()
                 ->scalarNode('session_initiator_path')->end()
+                ->scalarNode('logout_message')->end()
             ->end()
             ->fixXmlConfig('attribute_definition')
             ->children()
@@ -64,7 +65,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
              ->end()
         ;
-        
+
 
         return $treeBuilder;
     }

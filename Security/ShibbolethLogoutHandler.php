@@ -35,24 +35,31 @@ use KULeuven\ShibbolethBundle\Service\Shibboleth;
 class ShibbolethLogoutHandler implements LogoutHandlerInterface, LogoutSuccessHandlerInterface
 {
     private $shibboleth;
-    
+
     public function __construct(Shibboleth $shibboleth)
     {
         $this->shibboleth = $shibboleth;
     }
-    
+
     public function logout(Request $request, Response $response, TokenInterface $token)
     {
         if ($token instanceof ShibbolethUserToken) {
             $request->getSession()->invalidate();
-        }        
+        }
     }
-    
+
     public function onLogoutSuccess(Request $request)
     {
+        // set the logout message to flashbag if there is any
+        if ($this->shibboleth->getLogoutMessage()) {
+            $request->getSession()->getFlashBag()->add(
+                'notice',
+                $this->shibboleth->getLogoutMessage()
+            );
+        }
         // redirect the user to where they were before the login process begun.
-        $referer_url = $request->headers->get('referer');    
+        $referer_url = $request->headers->get('referer');
         $response = new RedirectResponse($this->shibboleth->getLogoutUrl($request,$referer_url));
         return $response;
-    }    
+    }
 }

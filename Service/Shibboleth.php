@@ -27,11 +27,12 @@
 use Symfony\Component\HttpFoundation\Request;
 
 class Shibboleth {
-    
+
     private $handlerPath = '/Shibboleth.sso';
     private $securedHandler = true;
     private $sessionInitiatorPath = '/Login';
     private $usernameAttribute = 'shib-person-uid';
+    private $logoutMessage = '';
     private $attributeDefinitions = array(
         'uid'           => array('header'=> 'shib-person-uid', 'multivalue'=> false),
         'cn'            => array('header'=> 'shib-person-commonname', 'multivalue'=> false, 'charset'=> 'UTF-8'),
@@ -59,12 +60,13 @@ class Shibboleth {
         'opl' => array('header'=> 'shib-kul-opl', 'multivalue'=> true),
         'campus' => array('header'=> 'shib-kul-campus', 'multivalue'=> false)
     );
-    
-    public function __construct($handlerPath,$sessionInitiatorPath, $securedHandler, $usernameAttribute, $attributeDefinitions = null) {
+
+    public function __construct($handlerPath,$sessionInitiatorPath, $securedHandler, $usernameAttribute, $logoutMessage, $attributeDefinitions = null) {
         $this->handlerPath = $handlerPath;
         $this->sessionInitiatorPath = $sessionInitiatorPath;
         $this->securedHandler = $securedHandler;
         $this->usernameAttribute = $usernameAttribute;
+        $this->logoutMessage = $logoutMessage;
         if (is_array($attributeDefinitions)) {
             foreach($attributeDefinitions as $name => $def) {
                 $def['alias'] = $name;
@@ -76,13 +78,17 @@ class Shibboleth {
     public function getHandlerPath() {
         return $this->handlerPath;
     }
-    
+
     public function isSecuredHandler() {
         return $this->securedHandler;
     }
-    
+
     public function getSessionInitiatorPath() {
         return $this->sessionInitiatorPath;
+    }
+
+    public function getLogoutMessage() {
+        return $this->logoutMessage;
     }
 
     public function isAuthenticated(Request $request) {
@@ -92,7 +98,7 @@ class Shibboleth {
     public function getUser(Request $request) {
         return  $request->headers->get($this->usernameAttribute, null);
     }
-    
+
     /**
      * Extract Shibboleth attributes from request
      * @param Request $request
@@ -126,7 +132,7 @@ class Shibboleth {
             . $request->getHost()
             . $this->handlerPath;
     }
-    
+
     /**
      * Returns URL to initiate login session. After successfull login, the user will be redirected
      * to the optional target page. The target can be an absolute or relative URL.
@@ -139,7 +145,7 @@ class Shibboleth {
         if (empty($targetUrl)) $targetUrl = $request->getUri();
         return $this->getHandlerURL($request) . $this->getSessionInitiatorPath() . '?target=' . urlencode($targetUrl);
     }
-    
+
     /**
      * Returns URL to invalidate the shibboleth session.
      */
@@ -159,6 +165,6 @@ class Shibboleth {
         if (!isset($def['multivalue'])) $def['multivalue'] = false;
         if (!isset($def['charset'])) $def['charset'] = 'ISO-8859-1';
         $this->attributeDefinitions[$def['alias']] = $def;
-    }    
-    
+    }
+
 }

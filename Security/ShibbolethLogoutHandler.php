@@ -55,6 +55,13 @@ class ShibbolethLogoutHandler implements LogoutHandlerInterface, LogoutSuccessHa
 
     public function onLogoutSuccess(Request $request)
     {
+        // set the logout message to flashbag if there is any
+        if ($this->shibboleth->getLogoutMessage()) {
+            $request->getSession()->getFlashBag()->add(
+                'notice',
+                $this->shibboleth->getLogoutMessage()
+            );
+        }
         $returnUri = $this->httpUtils->generateUri($request, $this->target);
         $response = new RedirectResponse($this->shibboleth->getLogoutUrl($request, $returnUri));
         return $response;

@@ -59,10 +59,13 @@ class ShibbolethExtension extends Extension
         if (isset($config['username_attribute'])) {
             $container->setParameter('shibboleth.username_attribute',$config['username_attribute']);
         }
+        if (isset($config['logout_message'])) {
+            $container->setParameter('shibboleth.logout_message',$config['logout_message']);
+        }
         if (isset($config['attribute_definitions'])) {
             $container->setParameter('shibboleth.attribute_definitions',$config['attribute_definitions']);
         } else {
-            $container->setParameter('shibboleth.attribute_definitions',array());            
+            $container->setParameter('shibboleth.attribute_definitions',array());
         }
     }
 }

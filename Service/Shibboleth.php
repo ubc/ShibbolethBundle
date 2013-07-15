@@ -88,7 +88,7 @@ class Shibboleth {
     }
 
     public function getLogoutMessage() {
-        return $this->logoutMesage;
+        return $this->logoutMessage;
     }
 
     public function isAuthenticated(Request $request) {
